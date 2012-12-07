@@ -1,3 +1,8 @@
+PATH
+  remote: ./lib/pegex-upstream/ruby
+  specs:
+    pegex (0.0.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -181,6 +186,7 @@ DEPENDENCIES
   guard-spork
   haml-rails
   jquery-rails
+  pegex!
   pg
   pry
   rails (= 3.2.8)

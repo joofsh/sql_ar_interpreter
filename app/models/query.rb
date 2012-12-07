@@ -19,4 +19,6 @@ private
     query = ar_query.match find_regex
     "SELECT * FROM #{query[1]}s WHERE id IN #{query[4]}"
   end
+
+
 end

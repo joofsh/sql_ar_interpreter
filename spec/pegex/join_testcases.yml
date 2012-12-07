@@ -1,0 +1,17 @@
+- sql: SELECT * FROM users INNER JOIN posts WHERE posts.user_id == users.id
+  ar: "Users.joins :posts"
+- sql: SELECT * FROM users INNER JOIN posts ON posts.user_id == users.id
+  ar: "Users.joins :posts"
+- sql: SELECT * FROM users, posts WHERE posts.user_id == user.id
+  ar: "Users.joins :posts"
+- sql: SELECT * FROM users, posts ON posts.user_id == user.id
+  ar: "Users.joins :posts"
+- sql: SELECT * FROM users INNER JOIN posts WHERE posts.user_id == users.id ORDER BY user_id DESC
+  ar: "Users.joins(:posts).order 'user_id DESC'"
+- sql: SELECT * FROM users INNER JOIN posts WHERE posts.user_id == users.id ORDER BY user_id ASC
+  ar: "Users.joins(:posts).order 'user_id ASC'"
+- sql: SELECT * FROM users INNER JOIN posts WHERE posts.user_id == users.id LIMIT 2
+  ar: "Users.joins(:posts).limit 2"
+- sql: SELECT * FROM users INNER JOIN posts WHERE posts.user_id == users.id ORDER BY user_id ASC LIMIT 3
+  ar: "Users.joins(:posts).order('user_id ASC').limit 3"
+

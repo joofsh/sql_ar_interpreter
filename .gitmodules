@@ -1,0 +1,3 @@
+[submodule "pegex-upstream"]
+	path = lib/pegex-upstream
+	url = git@github.com:acmeism/pegex-cd.git
