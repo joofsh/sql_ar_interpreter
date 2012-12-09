@@ -27,8 +27,8 @@ describe 'Transfers input from AR field to SQL field' do
   end
 
   it 'takes invalid query and spits itself back out in sql field' do
-    fill_in 'ar_query', with:  'invalid_example_query'
+    fill_in 'sql_query', with:  'invalid_example_query'
     click_button "Convert"
-    find_field("sql_query").value.should eq 'invalid_example_query'
+    find_field("ar_query").value.should have_content 'invalid_example_query'
   end
 end
