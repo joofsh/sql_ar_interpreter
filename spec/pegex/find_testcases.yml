@@ -1,6 +1,0 @@
-- sql: SELECT * FROM users WHERE user.id = 3 LIMIT 1
-  ar: User.find(3)
-- sql: SELECT * FROM users WHERE user.id IN (3, 4)
-  ar: User.find(3, 4)
-- sql: SELECT * FROM users WHERE user.name == "bob"
-  ar: User.find_by_name "bob"

@@ -1,0 +1,39 @@
+grammar QueryGrammar
+
+  rule full_query
+    'select' select_query verb_with_query+
+  end
+
+  rule select_query
+     query_string
+  end
+
+  rule key_verb
+    'from' / 'inner join' / 'where' / 'order by'
+  end
+
+  rule space
+    [\s]+
+  end
+
+  rule string
+    [\S]+
+  end
+
+  rule star
+    '*'
+  end
+
+  rule non_verb_query
+     (!key_verb string)
+  end
+
+  rule query_string
+    (space non_verb_query)+
+  end
+
+  rule verb_with_query
+    (space key_verb) query_string+
+  end
+end
+

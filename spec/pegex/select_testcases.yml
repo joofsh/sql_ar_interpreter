@@ -1,5 +1,0 @@
-- sql: SELECT name FROM users
-  ar: "User.select(:name)"
-- sql: SELECT name FROM users WHERE name == 'foo'
-  ar: "User.select(:name).where('name = ?', 'foo')"
-

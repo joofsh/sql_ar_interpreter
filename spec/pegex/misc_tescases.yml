@@ -1,8 +1,0 @@
-- sql: SELECT * FROM products
-  ar: Product.all
-- sql: SELECT * FROM products LIMIT 1
-  ar: Product.first
-- sql: SELECT * FROM products ORDER BY id DESC LIMIT 1
-  ar: Product.last
-
-
