@@ -8,7 +8,8 @@ module QueryGrammar
 
   class VerbWithQuery < Treetop::Runtime::SyntaxNode
     def content
-      self.elements.map { |v| v.text_value.strip }
+      self.elements.map do |v| v.text_value.strip
+      end
     end
   end
 end

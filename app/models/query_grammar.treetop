@@ -1,7 +1,7 @@
 grammar QueryGrammar
 
   rule parent_query
-    verb_with_query+ <ParentQuery>
+    verb_with_query from_with_query verb_with_query* <ParentQuery>
   end
 
   rule select_query
@@ -12,16 +12,16 @@ grammar QueryGrammar
     'select' / 'from' / 'inner join' / 'where' / 'order by' / 'limit'
   end
 
+  rule from_with_query
+    space 'from' query_string+
+  end
+
   rule space
     [\s]+
   end
 
   rule string
     [\S]+
-  end
-
-  rule star
-    '*'
   end
 
   rule non_verb_query
