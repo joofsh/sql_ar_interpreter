@@ -26,7 +26,7 @@ describe QueryParser do
     foo << "select * from foo where name = boo limit 2".downcase
 
     foo.each do |string|
-      string.should parse_to_class Hash #QueryGrammar::ParentQuery
+      string.should parse_to_class QueryGrammar::ParentQuery
     end
   end
 end
