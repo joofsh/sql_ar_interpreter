@@ -1,15 +1,15 @@
 grammar QueryGrammar
 
-  rule full_query
-    'select' select_query verb_with_query+
+  rule parent_query
+    verb_with_query+ <ParentQuery>
   end
 
   rule select_query
      query_string
-  end
+   end
 
   rule key_verb
-    'from' / 'inner join' / 'where' / 'order by' / 'limit'
+    'select' / 'from' / 'inner join' / 'where' / 'order by' / 'limit'
   end
 
   rule space
@@ -33,7 +33,8 @@ grammar QueryGrammar
   end
 
   rule verb_with_query
-    (space key_verb) query_string+
+    (space? key_verb) query_string+ <VerbWithQuery>
   end
+
 end
 
