@@ -17,14 +17,9 @@ class QueryParser
     end
 
     def clean_tree root_node
-      return if root_node.elements.nil?
-      root_node.elements.delete_if{|node| node.class.name == "Treetop::Runtime::SyntaxNode" }
-      root_node.elements.each {|node| self.clean_tree node }
+      root_node.elements.delete_if{|node| node.text_value  == "Treetop::Runtime::SyntaxNode" }
     end
   end
 
-def convert
-
-end
 
 end
