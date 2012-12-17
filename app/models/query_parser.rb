@@ -1,7 +1,7 @@
 base_path = File.expand_path File.dirname __FILE__
 
 require 'treetop'
-Treetop.load File.expand_path File.dirname(__FILE__), 'query_grammar.treetop'
+Treetop.load File.join base_path, "query_grammar.treetop"
 require File.join base_path, 'node_extensions.rb'
 
 class QueryParser
@@ -9,12 +9,11 @@ class QueryParser
 
   class << self
     def parse query
-      tree = @@parser.parse query
-
-      if tree.nil?
-        raise Exception, "No match found"
+      begin
+        tree = @@parser.parse query
+      rescue
+        return "Not a valid SQL query"
       end
-      tree.to_array
     end
 
     def clean_tree root_node
@@ -22,6 +21,10 @@ class QueryParser
       root_node.elements.delete_if{|node| node.class.name == "Treetop::Runtime::SyntaxNode" }
       root_node.elements.each {|node| self.clean_tree node }
     end
-
   end
+
+def convert
+
+end
+
 end

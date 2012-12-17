@@ -1,8 +1,4 @@
 require 'spec_helper'
-foo = File.join File.expand_path(File.dirname(__FILE__))
-p foo
-require'pry';binding.pry
-require File.join File.expand_path(File.dirname(__FILE__)), 'node_extensions.vrb'
 
 describe "QueryParser" do
 
@@ -16,7 +12,7 @@ describe "QueryParser" do
     foo.push QueryParser.parse "select * FROM name == 'foo'".downcase
 
     foo.each do |parse|
-     parse.should be_an_instance_of Treetop::Runtime::SyntaxNode
+     parse.should be_an_instance_of QueryGrammar::ParentQuery
     end
   end
 end
