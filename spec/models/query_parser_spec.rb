@@ -52,9 +52,15 @@ describe QueryParser do
   end
 
   it 'matches correct hashified version of query' do
-    @sql_hash_pair.each do |sql, hash|
-      QueryParser.parse(sql).to_hash.to_s.should eq hash
+    @sql_hash_pair.each do |sql, hash_version|
+      QueryParser.parse(sql).to_hash.to_s.should eq hash_version
     end
   end
+
+  it 'matches incorrect queries to_hash method' do
+    QueryParser.parse("invalid_query_example").should be_an_instance_of NullParse
+    QueryParser.parse("invalid_query_example").to_hash.should eq "Not a valid SQL query"
+  end
+
 end
 

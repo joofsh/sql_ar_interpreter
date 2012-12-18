@@ -9,17 +9,12 @@ class QueryParser
 
   class << self
     def parse query
-      begin
-        tree = @@parser.parse query
-      rescue
-        return "Not a valid SQL query"
-      end
+        tree = @@parser.parse(query.downcase) || NullParse.new
     end
 
     def clean_tree root_node
       root_node.elements.delete_if{|node| node.text_value  == "Treetop::Runtime::SyntaxNode" }
     end
   end
-
 
 end

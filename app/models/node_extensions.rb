@@ -52,4 +52,5 @@ module QueryGrammar
       h
     end
   end
+
 end
