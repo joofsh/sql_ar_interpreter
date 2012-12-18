@@ -9,7 +9,8 @@ class QueryParser
 
   class << self
     def parse query
-        tree = @@parser.parse(query.downcase) || NullParse.new
+      return NullParse.new unless query
+      @@parser.parse query.downcase or NullParse.new
     end
 
     def clean_tree root_node
