@@ -2,17 +2,22 @@ module QueryGrammar
 
   class ParentQuery < Treetop::Runtime::SyntaxNode
     def to_hash
-      Hash[ elements.map do |v|
-        require'pry';
-        binding.pry if v.content.class == Treetop::Runtime::SyntaxNode
-        #v.content unless v.text_value.blank?
-      end ]
+      h = {}
+      elements.each do |clause|
+        next if clause.text_value.blank?
+        h = h.merge clause.to_hash
+      end
+      h
     end
   end
 
   class VerbWithQuery < Treetop::Runtime::SyntaxNode
     def content
-      elements.map { |v| v.text_value.strip }
+      arr = elements.map { |v| v.text_value.strip }
+    end
+
+    def to_hash
+      Hash[[content]]
     end
   end
 
@@ -26,20 +31,25 @@ module QueryGrammar
 
       array = [ verb.strip, query_string.split(",").map { |v| v.strip } ]
     end
+
+    def to_hash
+      Hash[[content]]
+    end
   end
 
   class OptionalQuery < Treetop::Runtime::SyntaxNode
     def content
-      #verb_with_query subnode is always first element in Node.elements array
-      #verb_with_query = elements.first
       array = elements.map do |verb_with_query|
-        verb_with_query.elements.map do |v|
-
-          v.text_value.strip
-        end
+        verb_with_query.content
       end
-      array.flatten if 1 == array.count
+    end
+
+    def to_hash
+      h = {}
+      content.each do |c|
+        h = h.merge Hash[[c]]
+      end
+      h
     end
   end
-
 end
