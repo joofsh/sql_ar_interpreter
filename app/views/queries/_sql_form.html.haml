@@ -1,3 +1,4 @@
-#ar
-  = text_area_tag :ar_query, @query.sql_query, rows: 5
-
+#sql
+  = form_for new_query_path, method: 'GET' , remote: true do
+    = text_area_tag :sql_query, params[:sql_query]
+    = submit_tag "Convert", name: nil

@@ -1,7 +1,11 @@
 class QueriesController < ApplicationController
 
   def new
-    @query = Query.new(sql_query: params[:sql_query]) || NullQuery.new
+    @query = params[:sql_query] ? Query.new(sql_query: params[:sql_query]) : NullQuery.new
+    respond_to do |format|
+      format.html { render 'new' }
+      format.js { render 'new' }
+    end
   end
 end
 

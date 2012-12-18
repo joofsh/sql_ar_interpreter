@@ -6,6 +6,4 @@ class Query < ActiveRecord::Base
   end
 
 private
-  def determine_query_class
-  end
 end

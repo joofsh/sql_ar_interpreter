@@ -3,6 +3,9 @@ class NullQuery
     ""
   end
 
+  def parsed_sql
+    ""
+  end
   def sql_query
     ""
   end

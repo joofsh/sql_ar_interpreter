@@ -1,1 +1,2 @@
-$('#ar').hide().after('<%= j render 'ar_form' %>')
+$('#ar_query').remove();
+$('#ar').append("<%= j render 'ar_form' %>");
