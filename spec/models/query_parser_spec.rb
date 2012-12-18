@@ -27,11 +27,16 @@ describe QueryParser do
     @hashified = []
     @hashified << "{\"select\"=>\"user.name == 'bob'\", \"from\"=>[\"users\"]}"
     @hashified << "{\"select\"=>\"*\", \"from\"=>[\"users\"], \"where\" => \"user.name == 'bob'\"}"
-    @hashified << "foo"
+    @hashified << "{\"select\"=>\"*\", \"from\"=>[\"foo\"], \"order by\"=>\"desc\"}"
     @hashified << "{\"select\"=>\"name,email\", \"from\"=>[\"users\"]}"
     @hashified << "{\"select\"=>\"*\", \"from\"=>[\"joo\", \"boo\"]}"
     @hashified << "{\"select\"=>\"*\", \"from\"=>[\"name == 'sql_examples'\"]}"
     @hashified << "{\"select\"=>\"*\", \"from\"=>[\"foo\"], \"where name = boo\"=>\"limit 2\"}"
+
+    @sql_hash_pair = {}
+    (0..6).each do |i|
+      @sql_hash_pair[@sql_examples[i]] = @hashified[i]
+    end
   end
 
   it "doesn't implode from simple SQL queries" do
@@ -46,6 +51,10 @@ describe QueryParser do
     end
   end
 
-
+  it 'matches correct hashified version of query' do
+    @sql_hash_pair.each do |sql, hash|
+      QueryParser.parse(sql).to_hash.to_s.should eq hash
+    end
+  end
 end
 
