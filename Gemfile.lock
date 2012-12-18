@@ -122,6 +122,9 @@ GEM
       slop (~> 3.3.1)
     pry-awesome_print (9.6.5)
       awesome_print (~> 1.1.0)
+    pry-de (0.0.4)
+      guard
+      pry-full
     pry-debugger (0.2.0)
       debugger (~> 1.1.3)
       pry (~> 0.9.9)
@@ -265,7 +268,7 @@ DEPENDENCIES
   haml-rails
   jquery-rails
   pg
-  pry-full
+  pry-de
   rails (= 3.2.8)
   rb-fchange
   rb-fsevent

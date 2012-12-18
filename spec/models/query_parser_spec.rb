@@ -21,17 +21,17 @@ describe QueryParser do
     @sql_examples << "select * from foo order by DESC".downcase
     @sql_examples << "select name,email FROM users".downcase
     @sql_examples << "select * FROM joo, boo".downcase
-    @sql_examples << "select * FROM name == '@sql_examples'".downcase
+    @sql_examples << "select * FROM name == 'sql_examples'".downcase
     @sql_examples << "select * from foo where name = boo limit 2".downcase
 
     @hashified = []
     @hashified << "{\"select\"=>\"user.name == 'bob'\", \"from\"=>[\"users\"]}"
-    @hashified << "{\"select\"=>\"*\", \"from\"=>[\"users\"], \"where\" => \"user.name == 'bob'\"}"
+    @hashified << "{\"select\"=>\"*\", \"from\"=>[\"users\"], \"where\"=>\"user.name == 'bob'\"}"
     @hashified << "{\"select\"=>\"*\", \"from\"=>[\"foo\"], \"order by\"=>\"desc\"}"
     @hashified << "{\"select\"=>\"name,email\", \"from\"=>[\"users\"]}"
     @hashified << "{\"select\"=>\"*\", \"from\"=>[\"joo\", \"boo\"]}"
     @hashified << "{\"select\"=>\"*\", \"from\"=>[\"name == 'sql_examples'\"]}"
-    @hashified << "{\"select\"=>\"*\", \"from\"=>[\"foo\"], \"where name = boo\"=>\"limit 2\"}"
+    @hashified << "{\"select\"=>\"*\", \"from\"=>[\"foo\"], \"where\"=>\"name = boo\", \"limit\"=>\"2\"}"
 
     @sql_hash_pair = {}
     (0..6).each do |i|
