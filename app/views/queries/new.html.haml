@@ -1,9 +1,13 @@
-%h1 AR to SQL
-%h2 A Rails Active Record to SQL query editor
+%h1 SQL2AR
+%h2 A SQL to Rails Active Record query translator
 
-#sql
-  = render 'sql_form'
-#ar
-  = render 'ar_form'
+.row
+  .twelve.columns
+    #sql
+      = render 'sql_form'
+    #ar
+      = render 'ar_form'
 
-= params
+#footer
+  = link_to image_tag('gray_whale.png'), 'https://github.com/joofsh'
+  = link_to 'Made by J.D. Pagano', 'https://github.com/joofsh'
