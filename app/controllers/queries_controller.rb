@@ -7,5 +7,9 @@ class QueriesController < ApplicationController
       format.js { render 'new' }
     end
   end
+
+  def index
+  end
+
 end
 

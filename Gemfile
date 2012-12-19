@@ -23,6 +23,7 @@ group :assets do
 end
 
 gem 'jquery-rails'
+gem 'pry-de'
 
 group :development, :test do
   gem 'rspec-rails'
@@ -36,7 +37,6 @@ group :development, :test do
   gem 'rb-fchange', :require => false
 
   gem 'better_errors'
-  gem 'pry-de'
 end
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
