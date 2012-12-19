@@ -1,6 +1,5 @@
 class Query < ActiveRecord::Base
   attr_accessible :ar_query, :sql_query
-  validates_presence_of :ar_query, :sql_query
 
   def ar_query
     find_by_sql_default

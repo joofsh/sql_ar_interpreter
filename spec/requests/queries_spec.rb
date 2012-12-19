@@ -7,8 +7,7 @@ describe 'Home Requests' do
   end
 
   it 'has homepage with titles' do
-    should have_selector "h1", text: "AR to SQL"
-    should have_selector "h2", text: "A Rails Active Record to SQL query editor"
+    should have_selector "h1", text: "SQL2AR"
   end
 
   it 'has two textfields for SQL and AR' do
