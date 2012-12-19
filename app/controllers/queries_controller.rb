@@ -8,8 +8,5 @@ class QueriesController < ApplicationController
     end
   end
 
-  def index
-  end
-
 end
 
