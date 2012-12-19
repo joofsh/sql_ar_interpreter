@@ -17,3 +17,7 @@ test:
   database: test
 
 production:
+  adapter: postgresql
+  encoding: unicode
+  database: production
+
