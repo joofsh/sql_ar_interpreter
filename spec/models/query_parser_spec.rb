@@ -16,13 +16,13 @@ end
 describe QueryParser do
  before do
     @sql_examples = []
-    @sql_examples << "SELECT user.name == 'bob' FROM users".downcase
-    @sql_examples << "SELECT * FROM users WHERE user.name == 'bob'".downcase
-    @sql_examples << "select * from foo order by DESC".downcase
-    @sql_examples << "select name,email FROM users".downcase
-    @sql_examples << "select * FROM joo, boo".downcase
-    @sql_examples << "select * FROM name == 'sql_examples'".downcase
-    @sql_examples << "select * from foo where name = boo limit 2".downcase
+    @sql_examples << "SELECT user.name == 'bob' FROM users"
+    @sql_examples << "SELECT * FROM users WHERE user.name == 'bob'"
+    @sql_examples << "select * from foo order by DESC"
+    @sql_examples << "select name,email FROM users"
+    @sql_examples << "select * FROM joo, boo"
+    @sql_examples << "select * FROM name == 'sql_examples'"
+    @sql_examples << "select * from foo where name = boo limit 2"
 
     @hashified = []
     @hashified << "{\"select\"=>\"user.name == 'bob'\", \"from\"=>[\"users\"]}"
@@ -62,5 +62,11 @@ describe QueryParser do
     QueryParser.parse("invalid_query_example").to_hash.should eq "Not a valid SQL query"
   end
 
+  it 'is case insensitive to queries' do
+    @sql_examples.first.upcase.should parse_to_class QueryGrammar::ParentQuery
+    @sql_examples.first.downcase.should parse_to_class QueryGrammar::ParentQuery
+    @sql_examples.first.split("").each_with_index.map { |v,i| i.odd? ? v.upcase : v.downcase }.join.should \
+      parse_to_class QueryGrammar::ParentQuery
+  end
 end
 
