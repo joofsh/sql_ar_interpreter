@@ -1,12 +1,16 @@
 %h1 SQL2AR
 %h2 A SQL to Rails Active Record query translator
 
-.row
-  .twelve.columns
-    #sql
-      = render 'sql_form'
-    #ar
-      = render 'ar_form'
+#converter-form
+  #sql
+    = render 'sql_form'
+  #ar
+    = render 'ar_form'
+
+#quick-tips
+  %h3 Quick Tips:
+  %p This is a tool for helping developers new to Rails learn the Active Record syntax.
+  %p SQL2AR is currently in Beta.
 
 #footer
   = link_to image_tag('gray_whale.png'), 'https://github.com/joofsh'

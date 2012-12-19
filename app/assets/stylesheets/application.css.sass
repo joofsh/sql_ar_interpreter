@@ -1,28 +1,52 @@
 @import foundation
 @import brand
 
-h1, h2
+//TODO: add margin above title.  Add background color around content to create "border"
+
+@mixin centered
+  width: 80%
+  margin-left: auto
+  margin-right: auto
+
+h1, h2, h3
   color: $brand-color1
-  text-align: center
   padding: 0 $nudge
+  font-family: $brand-font1
+  margin-top: $nudge*4
 
 h2
   margin: 0 0 $nudge*3 0
 
+p, span
+  color: $darker-gray
+  font-size: 1.5em
+  padding: $nudge
+
+.twelve.columns
+  background-color: $light-gray
+  text-align: center
+
+#converter-form
+  padding: $nudge
+
+#quick-tips
+  padding: 0
+
+#ar
+  border: 1px solid $darker-gray
+  min-height: $nudge*8.4
+  @include centered
+  p
+    padding-top: $nudge*2.2
+
 textarea
   color: $darker-gray
   font-size: 1.3em
-  width: 80%
-  margin-left: auto
-  margin-right: auto
   height: $nudge*7
+  @include centered
 
 #footer
-  text-align: center
   font-size: 1.4em
   color: $brand-color2
-
-@media only screen and (min-width: 768px)
-  input.button
-    margin-left: 45%
-
+  margin: $nudge*2
+  vertical-align: center
