@@ -51,6 +51,11 @@ describe QueryParser do
     end
   end
 
+  it 'ignores excess whitespace and ending semicolon' do
+    example = "  Select name, id from Users; "
+    example.should parse_to_class QueryGrammar::ParentQuery
+  end
+
   it 'matches correct hashified version of query' do
     @sql_hash_pair.each do |sql, hash_version|
       QueryParser.parse(sql).to_hash.to_s.should eq hash_version
