@@ -10,11 +10,11 @@ class QueryParser
   class << self
     def parse query
       return NullParse.new unless query
-      @@parser.parse(query.downcase.strip.chomp(";")) || NullParse.new
+      @@parser.parse(clean_query query) || NullParse.new
     end
 
-    def clean_tree root_node
-      root_node.elements.delete_if{|node| node.text_value  == "Treetop::Runtime::SyntaxNode" }
+    def clean_query query
+      query.downcase.strip.chomp(";").strip
     end
   end
 
