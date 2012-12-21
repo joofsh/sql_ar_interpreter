@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Query do
   before do
-    @good_query = Query.new sql_query: "select * from users, guests where id = 5 limit 2"
+    @good_query = Query.new sql_query: "select * from users, guests where id = 5 order by name limit 2"
     @bad_query = Query.new sql_query: "foo bar pie"
     @where_tests = YAML.load_file 'spec/treetop/where_testcases.yml'
   end
@@ -71,7 +71,7 @@ describe Query do
 
   describe 'find_by_sql_default method' do
     it 'provides valid AR query as string using find_by_sql method' do
-      @good_query.find_by_sql_default.should eq "User.find_by_sql(\"select * from users, guests where id = 5 limit 2\")"
+      @good_query.find_by_sql_default.should eq "User.find_by_sql(\"select * from users, guests where id = 5 order by name limit 2\")"
       @where_tests.each do |pair|
         test = Query.new(sql_query: pair["sql"])
         test.find_by_sql_default.should be_an_instance_of String
@@ -81,6 +81,53 @@ describe Query do
     it 'provides error for invalid queries' do
       @bad_query.find_by_sql_default.should eq "Not a valid SQL query"
     end
+  end
 
+  describe 'select_clause method' do
+    before do
+      @good_query2 = Query.new sql_query: "select name, id from users"
+    end
+
+    it 'defaults to blank if no select clause' do
+      @good_query.select_clause.should be_nil
+    end
+
+    it 'provides the verb/query pair if exist' do
+      @good_query2.select_clause.should eq ".select(\"name, id\")"
+    end
+  end
+
+  describe 'optional_clause method' do
+    it 'defaults to nil if clause does not exist' do
+      @bad_query.optional_clause("limit").should be_nil
+    end
+
+    it 'provides correct verb/qery pair if exists' do
+      @good_query.optional_clause("limit").should eq ".limit(\"2\")"
+    end
+  end
+
+  describe 'join_clause method' do
+    before do
+      @one_table = Query.new sql_query: "select * from users"
+      @two_tables = @good_query
+      @three_tables = Query.new sql_query: "select * from users, guests, admins"
+    end
+
+    it 'returns nil if only 1 table' do
+      @one_table.join_clause.should be nil
+    end
+
+    it 'provides correct number of join clauses according to number of tables' do
+      @two_tables.join_clause.should eq ".joins(:guests)"
+      @three_tables.join_clause.should eq ".joins(:guests).joins(:admins)"
+    end
+  end
+
+
+  describe 'order_clause method' do
+    it 'provides correct verb/query pair if exists' do
+      @good_query.order_clause.should eq ".order(\"name\")"
+    end
   end
 end
