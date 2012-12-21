@@ -10,8 +10,13 @@
 #quick-tips
   %h3 Quick Tips:
   %p This is a tool for helping developers new to Rails learn the Active Record syntax.
-  %p SQL2AR is currently in Beta.
+  %p If user input will determine the SQL query, it is highly recommended you paramterize the query.
+  %p
+    = "For more information please see"
+    =link_to "here", "http://guides.rubyonrails.org/active_record_querying.html"
 
 #footer
   = link_to image_tag('gray_whale.png'), 'https://github.com/joofsh'
   = link_to 'Made by J.D. Pagano', 'https://github.com/joofsh'
+  %p SQL2AR is currently in Beta.
+
