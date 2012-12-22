@@ -21,7 +21,7 @@ class Query
   end
 
   def ar_find_query
-    return parsed_sql["in"].gsub("(","").gsub(")","") if parsed_sql["in"]
+    return parsed_sql["in"].gsub /[()]/,'' if parsed_sql["in"]
     parsed_sql["where"].split("=").last.strip
   end
 
