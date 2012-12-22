@@ -120,7 +120,7 @@ describe Query do
     end
 
     it 'returns correct verb/qery pair if exists' do
-      @good_query.optional_clause("limit").should eq ".limit(\"2\")"
+      @good_query.optional_clause("where").should eq ".where(\"id = 5\")"
     end
   end
 
@@ -173,7 +173,7 @@ describe Query do
     end
 
     it 'returns correct verb/query pair if exists' do
-      @good_query.limit_clause.should eq ".limit(\"2\")"
+      @good_query.limit_clause.should eq ".limit(2)"
     end
   end
 
@@ -194,8 +194,44 @@ describe Query do
     end
 
     it 'returns correct verbose ar query' do
-      @good_query.verbose_ar.should eq "User.joins(:guests).where(\"id = 5\").order(\"name\").limit(\"2\")"
+      @good_query.verbose_ar.should eq "User.joins(:guests).where(\"id = 5\").order(\"name\").limit(2)"
     end
   end
 
+  describe 'ar_find_method? AND ar_find_query methods' do
+    before do
+      @valid_queries = []
+      @valid_queries.push Query.new sql_query: "select * from users where id = 5"
+      @valid_queries.push Query.new sql_query: "select * from users where id=5"
+      @valid_queries.push Query.new sql_query: "select * from users where id = 3 limit 1"
+      @valid_queries.push Query.new sql_query: "select * from users where id IN (3,4)"
+      @find_pairs = YAML.load_file "spec/treetop/find_testcases.yml"
+    end
+
+    it 'returns false for queries with additional optional clauses' do
+      @good_query.ar_find_method?.should be_false
+    end
+
+    it 'returns true for queries that meet the critera' do
+      @valid_queries.each do |q|
+        q.ar_find_method?.should be_true
+      end
+    end
+
+    it 'returns id number from where clause if no in clause' do
+      @valid_queries[0..2].each do |q|
+       q.ar_find_query.size.should eq 1
+      end
+    end
+
+    it 'returns the parsed_sql["in"] if exists' do
+      @valid_queries[3].ar_find_query.should eq "3,4"
+    end
+
+    it 'returns correct ar find clause' do
+      @find_pairs[0..1].each do |p|
+        Query.new(sql_query: p["sql"]).ar_find_clause.should eq p["ar"]
+      end
+    end
+  end
 end

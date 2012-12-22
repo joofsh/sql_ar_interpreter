@@ -9,7 +9,7 @@ grammar QueryGrammar
    end
 
   rule key_verb
-    'select' / 'from' / 'inner join' / 'where' / 'order by' / 'limit'
+    'select' / 'from' / 'inner join' / 'where' / 'order by' / 'limit' / 'in'
   end
 
   rule from_with_query

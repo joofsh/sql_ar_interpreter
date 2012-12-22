@@ -12,7 +12,17 @@ class Query
 
   def verbose_ar
     return invalid_query unless query_class
+    return ar_find_clause if ar_find_method?
     "#{query_class}#{select_clause}#{join_clause}#{inner_join_clause}#{where_clause}#{order_clause}#{limit_clause}"
+  end
+
+  def ar_find_clause
+    "#{query_class}.find(#{ar_find_query})"
+  end
+
+  def ar_find_query
+    return parsed_sql["in"].gsub("(","").gsub(")","") if parsed_sql["in"]
+    parsed_sql["where"].split("=").last.strip
   end
 
   def find_by_sql_default
@@ -22,6 +32,11 @@ class Query
 
   def invalid_query
     "Not a valid SQL query"
+  end
+
+  def ar_find_method?
+    return true if no_other_optional_clauses && limit_is_one_or_none && no_other_where_conditions && includes_id_condition
+    false
   end
 
   def sql_tree
@@ -66,7 +81,8 @@ class Query
   end
 
   def limit_clause
-    optional_clause "limit"
+    return nil unless parsed_sql["limit"]
+    optional_clause("limit").gsub "\"", ""
   end
 
   def inner_join_clause
@@ -78,3 +94,27 @@ class Query
     optional_clause "where"
   end
 end
+
+private
+
+  def no_other_optional_clauses
+    parsed_sql["inner join"].nil? && parsed_sql["order by"].nil?
+  end
+
+  def limit_is_one_or_none
+    '1' == parsed_sql["limit"] || parsed_sql["limit"].nil?
+  end
+
+  def no_other_where_conditions
+    return false unless parsed_sql["where"]
+    1 == parsed_sql["where"].split("and").count
+  end
+
+  def includes_id_condition
+    if parsed_sql["in"].nil?
+      parsed_sql["where"].include?("id =") || parsed_sql["where"].include?("id=")
+    else
+      parsed_sql["where"].include?("id")
+    end
+  end
+
