@@ -1,5 +1,5 @@
 = form_for new_query_path, method: 'GET', remote: true do
   %span SQL Query
   = text_area_tag :sql_query, params[:sql_query]
-  = submit_tag "Convert", name: nil, class: 'button'
+  = submit_tag 'Convert', name: nil, class: 'button'
 %span AR Query
