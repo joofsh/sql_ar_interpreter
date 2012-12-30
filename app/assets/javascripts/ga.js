@@ -14,4 +14,4 @@ _gaq.push(["_trackPreview"]);
   ga.src = ("https:" === document.location.protocol ? "https://ssl" : "http://www") + ".google-analytics.com/ga.js";
   s = document.getElementByTagName("script")[0];
   return s.parentNode.insertBefore(ga, s);
-});
+})();
