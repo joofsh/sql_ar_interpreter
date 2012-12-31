@@ -234,4 +234,30 @@ describe Query do
       end
     end
   end
+
+  describe 'missing_method query builder methods' do
+    before do
+      @valid_query = Query.new sql_query: "select * from users where name = \"bob\""
+      @valid_query2 = Query.new sql_query: "select * from users where user.email = \"foo@example.com\""
+      @invalid_query = Query.new sql_query: "select * from users where id = 5"
+    end
+
+    it 'returns boolean for whether it should use a custom find method' do
+      @valid_query.ar_custom_find?.should be_true
+      @invalid_query.ar_custom_find?.should be_false
+      @good_query.ar_custom_find?.should be_false
+    end
+
+    it 'returns correct method name for custom find clause' do
+      @valid_query.ar_custom_find_method.should eq "name"
+      @valid_query2.ar_custom_find_method.should eq "email"
+    end
+    
+    it 'returns correct value for custom find clause' do
+      @valid_query.ar_custom_find_value.should eq "\"bob\""
+    end
+    it 'returns correct ar custom find clause' do
+      @valid_query.ar_custom_find_clause.should eq "User.find_by_name(\"bob\")"
+    end
+  end
 end

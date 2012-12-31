@@ -13,6 +13,7 @@ class Query
   def verbose_ar
     return invalid_query unless query_class
     return ar_find_clause if ar_find_method?
+    return ar_custom_find_clause if ar_custom_find?
     "#{query_class}#{select_clause}#{join_clause}#{inner_join_clause}#{where_clause}#{order_clause}#{limit_clause}"
   end
 
@@ -30,12 +31,31 @@ class Query
     "#{query_class}.find_by_sql(\"#{sql_query}\")"
   end
 
+  def ar_custom_find_method
+    method = parsed_sql["where"].split("and").first.split("=").first.strip
+    method = method.split(".").last if method.include?(".")
+    return method
+  end
+
+  def ar_custom_find_value
+    parsed_sql["where"].split("and").first.split("=").second.strip
+  end
+
+  def ar_custom_find_clause
+    "#{query_class}.find_by_#{ar_custom_find_method}(#{ar_custom_find_value})"
+  end
+
   def invalid_query
     "Not a valid SQL query"
   end
 
   def ar_find_method?
     return true if no_other_optional_clauses && limit_is_one_or_none && no_other_where_conditions && includes_id_condition
+    false
+  end
+  def ar_custom_find?
+    return true if no_other_optional_clauses && limit_is_one_or_none &&
+      no_other_where_conditions && !includes_id_condition
     false
   end
 
