@@ -22,15 +22,16 @@ group :assets do
 end
 
 gem 'jquery-rails'
-gem 'pry-de'
+gem 'pry-full'
 
 group :development, :test do
   gem 'rspec-rails'
   gem 'spork'
   gem 'guard-rspec'
   gem 'guard-spork'
-  gem 'capybara'
+  gem 'capybara', '1.1.2'
 
+  gem 'terminal-notifier-guard', :require => false
   gem 'rb-inotify', :require => false
   gem 'rb-fsevent', :require => false
   gem 'rb-fchange', :require => false
