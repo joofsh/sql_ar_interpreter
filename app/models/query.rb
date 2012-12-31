@@ -84,7 +84,7 @@ class Query
 
   def optional_clause sql_verb, ar_method = sql_verb
     return nil unless parsed_sql[sql_verb]
-    ".#{ar_method}(\"#{parsed_sql[sql_verb]}\")"
+    ".#{ar_method}(\"#{parsed_sql[sql_verb].tr("\"","'")}\")"
   end
 
   def join_clause
