@@ -1,3 +1,3 @@
 $ ->
   $("#sql").submit ->
-    _gaq.push ["_trackEvent", "Queries", "Submitted", $("#sql_query").val()]
+    _gaq.push ["_trackEvent", "Query Submitted", "Query Submitted", "Query Submitted"]
