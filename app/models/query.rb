@@ -23,10 +23,7 @@ class Query
   def query_values verb
     return nil unless parsed_sql[verb]
     arr = parsed_sql[verb].split("and")
-    arr.map! do |v|
-      clean_query_value v
-    end
-    arr
+    arr.map { |v| clean_query_value v }
   end
 
   def verbose_ar
