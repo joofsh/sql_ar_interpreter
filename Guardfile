@@ -33,3 +33,4 @@ guard 'spork', :cucumber_env => { 'RAILS_ENV' => 'test' }, :rspec_env => { 'RAIL
   watch('test/test_helper.rb')
 end
 
+# vim:ft=ruby
