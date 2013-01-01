@@ -288,12 +288,14 @@ describe Query do
     end
   end
 
-  describe 'preserves shady input' do
+  describe 'clean_query_value' do
     {
-      'inner double quotes' => [ %("say "cheese""), %('say "cheese"') ],
-      'inner parens' => [ 'foo(bar)', 'foo(bar)' ],
+      'keeps outer single quotes' => [ "'asdf'", "'asdf'"],
+      'keeps inner double quotes' => [ %("say "cheese""), %('say "cheese"') ],
+      'strips outer parens' => [ '(x)', 'x' ],
+      'keeps inner parens' => [ 'foo(bar)', 'foo(bar)' ],
     }.each do |label, (input, expected)|
-      it "keeps #{label}" do
+      it label do
         actual = @good_query.clean_query_value input
         actual.should == expected
       end
