@@ -287,4 +287,10 @@ describe Query do
 
     end
   end
+
+  describe 'preserves shady input' do
+    it 'keeps inner double quotes' do
+      @good_query.clean_query_value(%("say "cheese"")).should == %('say "cheese"')
+    end
+  end
 end

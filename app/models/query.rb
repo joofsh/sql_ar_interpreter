@@ -13,7 +13,8 @@ class Query
   def clean_query_value value
     return nil unless value
     %w(= in like).each{|e| value.gsub! /.+#{e}\s*(.+)/, '\1' }
-    value = value.tr("()","").gsub("\"","'").strip
+    value.gsub! /^"(.+)"$/, %q('\1')
+    value = value.tr("()","").strip
     if value.to_i.to_s == value.to_s
       value.to_i
     else
