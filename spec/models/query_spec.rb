@@ -289,8 +289,13 @@ describe Query do
   end
 
   describe 'preserves shady input' do
-    it 'keeps inner double quotes' do
-      @good_query.clean_query_value(%("say "cheese"")).should == %('say "cheese"')
+    {
+      'inner double quotes' => [ %("say "cheese""), %('say "cheese"') ]
+    }.each do |label, (input, expected)|
+      it "keeps #{label}" do
+        actual = @good_query.clean_query_value input
+        actual.should == expected
+      end
     end
   end
 end
