@@ -14,8 +14,11 @@ class Query
     return nil unless value
     %w(= in like).each{|e| value.gsub! /.+#{e}\s*(.+)/, '\1' }
     value = value.tr("()","").gsub("\"","'").strip
-    return value.to_i if value.to_i.to_s == value.to_s
-    value
+    if value.to_i.to_s == value.to_s
+      value.to_i
+    else
+      value
+    end
   end
 
   def query_values verb
