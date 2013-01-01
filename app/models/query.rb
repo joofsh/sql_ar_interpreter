@@ -14,7 +14,8 @@ class Query
     return nil unless value
     %w(= in like).each{|e| value.gsub! /.+#{e}\s*(.+)/, '\1' }
     value.gsub! /^"(.+)"$/, %q('\1')
-    value = value.tr("()","").strip
+    value.gsub! /^\((.+)\)/, '\1'
+    value.strip!
     if value.to_i.to_s == value.to_s
       value.to_i
     else
