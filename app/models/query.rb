@@ -12,9 +12,7 @@ class Query
 
   def clean_query_value value
     return nil unless value
-    ["=", " in ", " like "].each do |keyword|
-      value = value.split(keyword).second if value.include?(keyword)
-    end
+    %w(= in like).each{|e| value.gsub! /.+#{e}\s*(.+)/, '\1' }
     value = value.tr("()","").gsub("\"","'").strip
     return value.to_i if value.to_i.to_s == value.to_s
     value
