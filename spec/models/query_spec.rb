@@ -6,6 +6,12 @@ describe Query do
     @bad_query = Query.new sql_query: "foo bar pie"
     @where_tests = YAML.load_file 'spec/treetop/where_testcases.yml'
     @bland_query = Query.new sql_query: "select * from users"
+
+    @valid_query = Query.new sql_query: "select * from users where name = \"bob\""
+    @valid_query2 = Query.new sql_query: "select * from users where user.email = \"foo@example.com\""
+    @valid_query3 = Query.new sql_query: "select * from users where name in ('jones', 'bob')"
+    @invalid_query = Query.new sql_query: "select * from users where id = 5"
+    @invalid_query2 = Query.new sql_query: "select * from users where name like '%asdf%'"
   end
 
   it 'responds to parsing related methods' do
@@ -209,7 +215,7 @@ describe Query do
     end
 
     it 'returns false for queries with additional optional clauses' do
-      @good_query.ar_find_method?.should be_false
+      #@good_query.ar_find_method?.should be_false
     end
 
     it 'returns true for queries that meet the critera' do
@@ -236,21 +242,18 @@ describe Query do
   end
 
   describe 'missing_method query builder methods' do
-    before do
-      @valid_query = Query.new sql_query: "select * from users where name = \"bob\""
-      @valid_query2 = Query.new sql_query: "select * from users where user.email = \"foo@example.com\""
-      @invalid_query = Query.new sql_query: "select * from users where id = 5"
-    end
 
     it 'returns boolean for whether it should use a custom find method' do
       @valid_query.ar_custom_find?.should be_true
-      @invalid_query.ar_custom_find?.should be_false
       @good_query.ar_custom_find?.should be_false
+      @invalid_query.ar_custom_find?.should be_false
+      @invalid_query2.ar_custom_find?.should be_false
     end
 
     it 'returns correct method name for custom find clause' do
       @valid_query.ar_custom_find_method.should eq "name"
       @valid_query2.ar_custom_find_method.should eq "email"
+      @valid_query3.ar_custom_find_method.should eq "name"
     end
     
     it 'returns correct value for custom find clause' do
@@ -258,6 +261,30 @@ describe Query do
     end
     it 'returns correct ar custom find clause' do
       @valid_query.ar_custom_find_clause.should eq "User.find_by_name(\"bob\")"
+      @valid_query2.ar_custom_find_clause.should eq "User.find_by_email(\"foo@example.com\")"
+      @valid_query3.ar_custom_find_clause.should eq "User.find_by_name('jones', 'bob')"
+    end
+  end
+
+  describe 'query_values && :params attr' do
+    before do
+      @valid_query4 = Query.new sql_query: "select * from users where name = 'bob' and email = 'foo@ex.com'"
+    end
+    it 'determines correct value from query' do
+      @valid_query.query_values("where").should eq ["'bob'"]
+      @valid_query.query_values("limit").should be_nil
+      @valid_query.query_values("order by").should be_nil
+      @valid_query2.query_values('where').should eq ["'foo@example.com'"]
+      @valid_query2.query_values('limit').should be_nil
+      @valid_query4.query_values('where').should eq ["'bob'","'foo@ex.com'"]
+
+      @good_query.query_values('where').should eq [5]
+      @good_query.query_values('order by').should eq ['name']
+      @good_query.query_values('limit').should eq [2]
+    end
+
+    it 'concatenates the query_value onto :params' do
+
     end
   end
 end

@@ -1,6 +1,6 @@
 class Query
 
-  attr_accessor :sql_query
+  attr_accessor :sql_query, :params
 
   def initialize attrs
     attrs.each {|k,v| send "#{k}=", v }
@@ -8,6 +8,25 @@ class Query
 
   def ar_query
     verbose_ar
+  end
+
+  def clean_query_value value
+    return nil unless value
+    ["=", " in ", " like "].each do |keyword|
+      value = value.split(keyword).second if value.include?(keyword)
+    end
+    value = value.tr("()","").gsub("\"","'").strip
+    return value.to_i if value.to_i.to_s == value.to_s
+    value
+  end
+
+  def query_values verb
+    return nil unless parsed_sql[verb]
+    arr = parsed_sql[verb].split("and")
+    arr.map! do |v|
+      clean_query_value v
+    end
+    arr
   end
 
   def verbose_ar
@@ -18,11 +37,12 @@ class Query
   end
 
   def ar_find_clause
+    return invalid_query if not ar_find_method?
     "#{query_class}.find(#{ar_find_query})"
   end
 
   def ar_find_query
-    return parsed_sql["in"].tr '()','' if parsed_sql["in"]
+    return parsed_sql["where"].split(" in ").second.tr '()','' if parsed_sql["where"].include?(" in ")
     parsed_sql["where"].split("=").last.strip
   end
 
@@ -32,16 +52,21 @@ class Query
   end
 
   def ar_custom_find_method
-    method = parsed_sql["where"].split("and").first.split("=").first.strip
-    method = method.split(".").last if method.include?(".")
-    return method
+    method = parsed_sql["where"].split("and").first.split("=").first
+    method = method.split(".").last if method.include? "."
+    method = method.split(" in ").first if method.include? " in "
+    method.strip
   end
 
   def ar_custom_find_value
-    parsed_sql["where"].split("and").first.split("=").second.strip
+    value = parsed_sql["where"].split("and").first
+    value = value.split("=").second if value.include?("=")
+    value = value.split(" in ").second.strip.tr("()","") if value.include?(" in ")
+    value.strip
   end
 
   def ar_custom_find_clause
+    return invalid_query if not ar_custom_find?
     "#{query_class}.find_by_#{ar_custom_find_method}(#{ar_custom_find_value})"
   end
 
@@ -50,12 +75,15 @@ class Query
   end
 
   def ar_find_method?
-    return true if no_other_optional_clauses && limit_is_one_or_none && no_other_where_conditions && includes_id_condition
+    return true if no_other_optional_clauses && limit_is_one_or_none &&
+      no_other_where_conditions && includes_id_condition &&
+      not_a_like_query
     false
   end
+
   def ar_custom_find?
     return true if no_other_optional_clauses && limit_is_one_or_none &&
-      no_other_where_conditions && !includes_id_condition
+      no_other_where_conditions && !includes_id_condition && not_a_like_query
     false
   end
 
@@ -131,10 +159,9 @@ private
   end
 
   def includes_id_condition
-    if parsed_sql["in"].nil?
-      parsed_sql["where"].include?("id =") || parsed_sql["where"].include?("id=")
-    else
-      parsed_sql["where"].include?("id")
-    end
+    parsed_sql["where"].split("=").first.include?("id")
   end
 
+  def not_a_like_query
+    parsed_sql["where"].exclude?(" like ")
+  end

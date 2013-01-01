@@ -1,4 +1,5 @@
 require 'spec_helper'
+@javascript
 
 describe 'Home Requests' do
   subject { page }
@@ -25,9 +26,15 @@ describe 'Transfers input from AR field to SQL field' do
     visit '/'
   end
 
-  it 'takes invalid query and spits itself back out in sql field' do
+  it 'takes invalid query and returns error' do
     fill_in 'sql_query', with:  'invalid_example_query'
     click_button "Convert"
     should have_selector "#ar", text: "Not a valid SQL query"
+  end
+
+  it 'takes valid SQL query and returns correct AR query' do
+    fill_in 'sql_query', with: 'select * from users where name like %foo%'
+    click_button "Convert"
+    should have_selector "#ar", text: "User.where(\"name like %foo%\")"
   end
 end
