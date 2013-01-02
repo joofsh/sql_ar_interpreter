@@ -7,11 +7,23 @@ describe Query do
     @where_tests = YAML.load_file 'spec/treetop/where_testcases.yml'
     @bland_query = Query.new sql_query: "select * from users"
 
+    # Queries with a keyword inside a word
+    @keyword_queries = {
+      Query.new(sql_query: "select * from users where name = 'andy'") =>
+        ["'andy'"],
+      Query.new(sql_query: "select * from users where name = 'finius'") =>
+        ["'finius'"],
+      Query.new(sql_query: "select * from users where email = 'ilikestuff@gamil.com'") =>
+        ["'ilikestuff@gamil.com'"],
+      Query.new(sql_query: "select * from users where email = 'fin=l@ex.com'") =>
+        ["'fin=l@ex.com'"]
+    }
+
     @valid_query = Query.new sql_query: "select * from users where name = \"bob\""
     @valid_query2 = Query.new sql_query: "select * from users where user.email = \"foo@example.com\""
     @valid_query3 = Query.new sql_query: "select * from users where name in ('jones', 'bob')"
     @invalid_query = Query.new sql_query: "select * from users where id = 5"
-    @invalid_query2 = Query.new sql_query: "select * from users where name like '%asdf%'"
+    @invalid_query2 = Query.new sql_query: "select * from users where name like '%a1sdf%'"
   end
 
   it 'responds to parsing related methods' do
@@ -248,6 +260,9 @@ describe Query do
       @good_query.ar_custom_find?.should be_false
       @invalid_query.ar_custom_find?.should be_false
       @invalid_query2.ar_custom_find?.should be_false
+      @keyword_queries.each do |query, _|
+        query.ar_custom_find?.should be_true
+      end
     end
 
     it 'returns correct method name for custom find clause' do
@@ -281,6 +296,12 @@ describe Query do
       @good_query.query_values('where').should eq [5]
       @good_query.query_values('order by').should eq ['name']
       @good_query.query_values('limit').should eq [2]
+    end
+
+    it 'does not glitch on queries that contain keyword' do
+      @keyword_queries.each do |query, expected|
+        query.query_values("where").should eq expected
+      end
     end
 
     it 'concatenates the query_value onto :params' do

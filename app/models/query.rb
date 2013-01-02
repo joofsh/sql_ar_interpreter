@@ -11,7 +11,7 @@ class Query
   end
 
   def clean_query_value value
-    %w(= in like).each{ |e| value.gsub! /.+#{e}\s*(.+)/, '\1' }
+    %w(= in like).each{ |e| value.gsub! /.+#{e}\s+(.+)/, '\1' }
     value.gsub! /^"(.+)"$/, %q('\1')
     value.gsub! /^\((.+)\)/, '\1'
     value.strip!
