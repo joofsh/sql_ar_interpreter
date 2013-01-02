@@ -11,7 +11,7 @@ class Query
   end
 
   def clean_query_value value
-    %w(= in like).each{|e| value.gsub! /.+#{e}\s*(.+)/, '\1' }
+    %w(= in like).each{ |e| value.gsub! /.+#{e}\s*(.+)/, '\1' }
     value.gsub! /^"(.+)"$/, %q('\1')
     value.gsub! /^\((.+)\)/, '\1'
     value.strip!
@@ -24,7 +24,7 @@ class Query
 
   def query_values verb
     return nil unless parsed_sql[verb]
-    arr = parsed_sql[verb].split("and")
+    arr = parsed_sql[verb].split(" and ")
     arr.map { |v| clean_query_value v }
   end
 
@@ -51,14 +51,14 @@ class Query
   end
 
   def ar_custom_find_method
-    method = parsed_sql["where"].split("and").first.split("=").first
+    method = parsed_sql["where"].split(" and ").first.split("=").first
     method = method.split(".").last if method.include? "."
     method = method.split(" in ").first if method.include? " in "
     method.strip
   end
 
   def ar_custom_find_value
-    value = parsed_sql["where"].split("and").first
+    value = parsed_sql["where"].split(" and ").first
     value = value.split("=").second if value.include?("=")
     value = value.split(" in ").second.strip.tr("()","") if value.include?(" in ")
     value.strip
@@ -154,7 +154,7 @@ private
 
   def no_other_where_conditions
     return false unless parsed_sql["where"]
-    1 == parsed_sql["where"].split("and").count
+    1 == parsed_sql["where"].split(" and ").count
   end
 
   def includes_id_condition
